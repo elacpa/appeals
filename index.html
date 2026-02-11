@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rhetorical Appeals Escape Room</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Quicksand:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    .font-display { font-family: 'Playfair Display', serif; }
+    .font-body { font-family: 'Quicksand', sans-serif; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(244, 114, 182, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(244, 114, 182, 0.8); }
+    }
+    
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100%) rotate(720deg); opacity: 0; }
+    }
+    
+    .floating-heart {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .pulse-button {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+    
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      animation: confetti-fall 3s linear forwards;
+    }
+    
+    .card-enter {
+      animation: slideUp 0.5s ease-out forwards;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .wrong-shake {
+      animation: shake 0.5s ease-in-out;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+    
+    .heart-bg {
+      background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbcfe8 100%);
+    }
+    
+    .progress-heart {
+      transition: all 0.3s ease;
+    }
+
+    .lesson-box {
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-body">
+  <div id="app" class="h-full heart-bg overflow-auto"><!-- Floating Hearts Background -->
+   <div class="fixed inset-0 pointer-events-none overflow-hidden">
+    <div class="floating-heart absolute text-4xl" style="left: 5%; top: 10%; animation-delay: 0s;">
+     💕
+    </div>
+    <div class="floating-heart absolute text-3xl" style="left: 15%; top: 60%; animation-delay: 0.5s;">
+     💗
+    </div>
+    <div class="floating-heart absolute text-5xl" style="left: 85%; top: 20%; animation-delay: 1s;">
+     💖
+    </div>
+    <div class="floating-heart absolute text-2xl" style="left: 90%; top: 70%; animation-delay: 1.5s;">
+     💝
+    </div>
+    <div class="floating-heart absolute text-4xl" style="left: 50%; top: 5%; animation-delay: 2s;">
+     💘
+    </div>
+    <div class="floating-heart absolute text-3xl" style="left: 75%; top: 85%; animation-delay: 0.3s;">
+     💓
+    </div>
+    <div class="floating-heart absolute text-2xl" style="left: 25%; top: 80%; animation-delay: 1.2s;">
+     💞
+    </div>
+   </div><!-- Main Content Container -->
+   <div id="content" class="relative z-10 min-h-full flex items-center justify-center p-4"><!-- Content will be injected here -->
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      main_title: "Rhetorical Appeals Escape Room",
+      completion_message: "You've Escaped!",
+      background_color: "#fdf2f8",
+      card_color: "#ffffff",
+      text_color: "#831843",
+      primary_action_color: "#ec4899",
+      secondary_action_color: "#f472b6"
+    };
+
+    let config = { ...defaultConfig };
+    let currentScreen = 0;
+
+    const screens = [
+      {
+        type: "intro",
+        title: "Welcome to the Rhetorical Appeals Escape Room! 💘",
+        content: "You're trapped in a room! To escape, you must prove your knowledge of the four rhetorical appeals: Pathos, Logos, Ethos, and Kairos.\n\n⚠️ Warning: Answer incorrectly and you'll be sent back to the beginning!\n\nAre you ready to unlock your way out?"
+      },
+      {
+        type: "lesson",
+        title: "📖 PATHOS: Appeal to Emotion",
+        definition: "Pathos is an appeal to the audience's EMOTIONS and FEELINGS.",
+        explanation: "When a speaker or writer uses pathos, they want you to FEEL something—sadness, joy, fear, compassion, excitement, or anger. They might use vivid descriptions, personal stories, or imagery that makes you emotional.",
+        examples: [
+          "🐶 A sad puppy in a shelter commercial asking for help",
+          "👵 Picturing your grandmother's face when you call her",
+          "😢 A story about a family losing their home",
+          "😰 Imagining yourself or someone you love in danger"
+        ]
+      },
+      {
+        type: "question",
+        number: "1/8",
+        question: "Which of the following is an example of PATHOS?",
+        options: [
+          "A: Studies show that 9 out of 10 dentists recommend this toothpaste.",
+          "B: Picture your grandmother's face lighting up when she sees you've remembered her birthday.",
+          "C: As a doctor with 20 years of experience, I can assure you this treatment works.",
+          "D: Only 3 hours left! Sale ends at midnight!"
+        ],
+        correct: 1,
+        explanation: "This appeals to emotion by asking you to imagine a heartwarming family moment. 💕 That's PATHOS!"
+      },
+      {
+        type: "question",
+        number: "2/8",
+        question: "Which of the following is an example of PATHOS?",
+        options: [
+          "A: Research shows that homes with smoke detectors are 50% less likely to have fire fatalities.",
+          "B: As a firefighter for 25 years, I can tell you smoke detectors save lives.",
+          "C: Imagine waking up to your house on fire with no way to escape!",
+          "D: Limited time! Fire safety awareness month ends soon!"
+        ],
+        correct: 2,
+        explanation: "This makes you FEEL the fear and danger of a fire emergency—that's PATHOS! 🔥"
+      },
+      {
+        type: "lesson",
+        title: "📊 LOGOS: Appeal to Logic",
+        definition: "Logos is an appeal to the audience's REASON and LOGIC.",
+        explanation: "When a speaker or writer uses logos, they use facts, statistics, data, research, and logical reasoning. They want you to think carefully and use your brain to understand their argument.",
+        examples: [
+          "📈 \"Studies show students with 8 hours of sleep have 40% better test scores\"",
+          "🧮 Cause and effect: \"If you don't eat breakfast, your brain won't have fuel for learning\"",
+          "🔍 Scientific evidence from a trusted source",
+          "📊 Statistics and percentages that prove a point"
+        ]
+      },
+      {
+        type: "question",
+        number: "3/8",
+        question: "Which of the following is an example of LOGOS?",
+        options: [
+          "A: Think about how exhausted and hungry you feel by 5th period!",
+          "B: Research shows students with longer lunch periods have 23% better afternoon test scores.",
+          "C: I've been a principal for 10 years, so trust me on this.",
+          "D: Lunch time is changing next week—don't miss the announcement!"
+        ],
+        correct: 1,
+        explanation: "This uses research data and statistics to support the argument—that's LOGOS! 📊"
+      },
+      {
+        type: "question",
+        number: "4/8",
+        question: "Which of the following is an example of LOGOS?",
+        options: [
+          "A: Imagine a world destroyed by climate change.",
+          "B: Scientists agree that climate change is happening because carbon emissions have increased 50% since 1990.",
+          "C: As an environmental activist, I'm telling you we need to act now.",
+          "D: Climate action month is here—join us today before it's too late!"
+        ],
+        correct: 1,
+        explanation: "This uses specific data (50% increase) and cause-and-effect logic—that's LOGOS! ���"
+      },
+      {
+        type: "lesson",
+        title: "👑 ETHOS: Appeal to Credibility",
+        definition: "Ethos is an appeal based on the speaker's CREDIBILITY, AUTHORITY, and TRUSTWORTHINESS.",
+        explanation: "When a speaker or writer uses ethos, they establish themselves as an expert or trustworthy source. They might mention their experience, credentials, reputation, or position of authority.",
+        examples: [
+          "👨‍⚕️ \"As a doctor with 30 years of experience...\"",
+          "🏢 \"We've been America's most trusted brand for 50 years\"",
+          "🎓 \"I have a PhD in environmental science, and I'm telling you...\"",
+          "🏅 A famous athlete endorsing a product because they use it"
+        ]
+      },
+      {
+        type: "question",
+        number: "5/8",
+        question: "Which of the following is an example of ETHOS?",
+        options: [
+          "A: You'll feel so much better after eating healthy���imagine your future self!",
+          "B: 87% of nutritionists agree that whole grains are essential.",
+          "C: I've been a certified nutritionist for 15 years, so you can trust my advice.",
+          "D: Limited time offer—start your diet today before the sale ends!"
+        ],
+        correct: 2,
+        explanation: "The speaker's 15 years of experience establishes CREDIBILITY and TRUST—that's ETHOS! 👨‍⚕️"
+      },
+      {
+        type: "question",
+        number: "6/8",
+        question: "Which of the following is an example of ETHOS?",
+        options: [
+          "A: Four out of five dentists recommend Sparkle Toothpaste.",
+          "B: Imagine showing off your bright, beautiful smile at prom!",
+          "C: We've been America's most trusted dental brand for 50 years.",
+          "D: Back-to-school sale—buy toothpaste now and save 40%!"
+        ],
+        correct: 0,
+        explanation: "Using expert opinion (dentists) and authority establishes CREDIBILITY—that's ETHOS! 🦷"
+      },
+      {
+        type: "lesson",
+        title: "⏰ KAIROS: Appeal to Timing",
+        definition: "Kairos is an appeal based on TIMING and URGENCY—using the right message at the RIGHT MOMENT.",
+        explanation: "When a speaker or writer uses kairos, they take advantage of a specific moment in time. The message is more powerful because of WHEN it's being delivered. It creates urgency or capitalizes on current events.",
+        examples: [
+          "🏖️ \"Summer is here—buy sunscreen before you head to the beach!\"",
+          "💔 Speaking about kindness RIGHT AFTER a bullying incident happened",
+          "🎅 \"Black Friday deals—only 24 hours left!\"",
+          "🗳️ \"Election day is tomorrow—make sure you vote!\""
+        ]
+      },
+      {
+        type: "question",
+        number: "7/8",
+        question: "Which of the following is an example of KAIROS?",
+        options: [
+          "A: This sunscreen has been scientifically proven to prevent 99% of UV rays.",
+          "B: Remember how terrible it felt to get sunburned last summer?",
+          "C: Summer is here—buy sunscreen today before the beach season rush!",
+          "D: Dr. Johnson, a dermatologist, recommends SPF 50."
+        ],
+        correct: 2,
+        explanation: "The LIMITED TIME and SEASONAL URGENCY create pressure at the RIGHT MOMENT—that's KAIROS! ����"
+      },
+      {
+        type: "question",
+        number: "8/8",
+        question: "Which of the following is an example of KAIROS?",
+        options: [
+          "A: Bullying is never acceptable, and we must stand together.",
+          "B: Right after the bullying incident, the principal says: \"Now is the time to show kindness.\"",
+          "C: Studies show that schools with anti-bullying programs are 40% safer.",
+          "D: Our former student, now a counselor, wants to share her bullying prevention advice."
+        ],
+        correct: 1,
+        explanation: "Delivering the message at the PERFECT MOMENT makes it most powerful—that's KAIROS! 🎯"
+      },
+      {
+        type: "boss"
+      },
+      {
+        type: "victory"
+      }
+    ];
+
+    function createConfetti() {
+      const colors = ['#ec4899', '#f472b6', '#fb7185', '#fda4af', '#f43f5e', '#e11d48'];
+      const container = document.getElementById('app');
+      
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        container.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+
+    function renderScreen() {
+      const content = document.getElementById('content');
+      const screen = screens[currentScreen];
+      
+      const title = config.main_title || defaultConfig.main_title;
+      const completionMsg = config.completion_message || defaultConfig.completion_message;
+      const bgColor = config.background_color || defaultConfig.background_color;
+      const cardColor = config.card_color || defaultConfig.card_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+
+      // Progress indicator - count only questions
+      const totalQuestions = screens.filter(s => s.type === 'question').length;
+      const answeredQuestions = screens.slice(0, currentScreen).filter(s => s.type === 'question').length;
+      
+      let progressHTML = '';
+      if (screen.type !== 'intro' && screen.type !== 'victory') {
+        const hearts = [];
+        for (let i = 0; i < totalQuestions; i++) {
+          const filled = i < answeredQuestions;
+          hearts.push(`<span class="progress-heart text-2xl ${filled ? 'opacity-100' : 'opacity-30'}">${filled ? '💖' : '🤍'}</span>`);
+        }
+        progressHTML = `<div class="flex gap-1 justify-center mb-4">${hearts.join('')}</div>`;
+      }
+
+      if (screen.type === 'intro') {
+        content.innerHTML = `
+          <div class="card-enter max-w-2xl w-full rounded-3xl p-8 shadow-2xl" style="background-color: ${cardColor};">
+            ${progressHTML}
+            <div class="text-center">
+              <div class="text-6xl mb-4">🔐💕</div>
+              <h1 class="font-display text-3xl md:text-4xl font-bold mb-6" style="color: ${textColor};">${title}</h1>
+              <p class="text-lg mb-8 whitespace-pre-line" style="color: ${textColor};">${screen.content}</p>
+              <button onclick="nextScreen()" class="pulse-button text-white font-semibold text-xl px-8 py-4 rounded-full transition-all hover:scale-105" style="background-color: ${primaryColor};">
+                💘 Start Your Escape! 💘
+              </button>
+            </div>
+          </div>
+        `;
+      } else if (screen.type === 'lesson') {
+        content.innerHTML = `
+          <div class="card-enter max-w-2xl w-full rounded-3xl p-8 shadow-2xl" style="background-color: ${cardColor};">
+            ${progressHTML}
+            <div class="text-center mb-6">
+              <h1 class="font-display text-3xl md:text-4xl font-bold" style="color: ${textColor};">${screen.title}</h1>
+            </div>
+
+            <div class="lesson-box" style="background-color: ${bgColor}; border: 2px solid ${secondaryColor};">
+              <h2 class="font-semibold text-xl mb-3" style="color: ${primaryColor};">📚 Definition:</h2>
+              <p class="text-lg font-semibold mb-4" style="color: ${textColor};">${screen.definition}</p>
+              
+              <h3 class="font-semibold text-lg mb-2" style="color: ${primaryColor};">What does this mean?</h3>
+              <p class="mb-4" style="color: ${textColor};">${screen.explanation}</p>
+              
+              <h3 class="font-semibold text-lg mb-3" style="color: ${primaryColor};">💡 Real-World Examples:</h3>
+              <ul class="space-y-2">
+                ${screen.examples.map(ex => `<li style="color: ${textColor};" class="flex gap-2">
+                  <span>•</span>
+                  <span>${ex}</span>
+                </li>`).join('')}
+              </ul>
+            </div>
+
+            <button onclick="nextScreen()" class="w-full text-white font-semibold text-lg py-4 rounded-full transition-all hover:scale-105 mt-6" style="background-color: ${primaryColor};">
+              ✅ I understand! Show me the questions. →
+            </button>
+          </div>
+        `;
+      } else if (screen.type === 'question') {
+        content.innerHTML = `
+          <div id="question-card" class="card-enter max-w-2xl w-full rounded-3xl p-8 shadow-2xl" style="background-color: ${cardColor};">
+            ${progressHTML}
+            <div class="text-center mb-4">
+              <span class="inline-block px-4 py-1 rounded-full text-white text-sm font-semibold" style="background-color: ${secondaryColor};">Question ${screen.number}</span>
+            </div>
+            <h2 class="font-display text-xl md:text-2xl font-semibold mb-6 text-center" style="color: ${textColor};">${screen.question}</h2>
+            <div id="options" class="space-y-3">
+              ${screen.options.map((opt, i) => `
+                <button onclick="checkAnswer(${i})" class="answer-btn w-full text-left p-4 rounded-xl border-2 transition-all hover:scale-102 hover:shadow-md font-medium" style="border-color: ${secondaryColor}; color: ${textColor}; background-color: ${cardColor};">
+                  ${opt}
+                </button>
+              `).join('')}
+            </div>
+            <div id="feedback" class="hidden mt-6 p-4 rounded-xl text-center"></div>
+          </div>
+        `;
+      } else if (screen.type === 'boss') {
+        content.innerHTML = `
+          <div class="card-enter max-w-2xl w-full rounded-3xl p-8 shadow-2xl" style="background-color: ${cardColor};">
+            <div class="text-center mb-6">
+              <div class="text-6xl mb-4">⚔️💕🏆</div>
+              <h1 class="font-display text-3xl font-bold" style="color: ${textColor};">FINAL BOSS BATTLE!</h1>
+              <p class="mt-2" style="color: ${textColor};">Match each definition to the correct rhetorical appeal!</p>
+            </div>
+            
+            <div id="matching-section" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Definitions -->
+                <div>
+                  <h3 class="font-semibold text-lg mb-3" style="color: ${primaryColor};">Definitions:</h3>
+                  <div id="definitions" class="space-y-2">
+                    <div class="p-3 rounded-lg border-2" style="border-color: ${secondaryColor}; background-color: ${bgColor}; color: ${textColor};">
+                      1. Appeal to EMOTION and feelings
+                    </div>
+                    <div class="p-3 rounded-lg border-2" style="border-color: ${secondaryColor}; background-color: ${bgColor}; color: ${textColor};">
+                      2. Appeal to LOGIC and reason/data
+                    </div>
+                    <div class="p-3 rounded-lg border-2" style="border-color: ${secondaryColor}; background-color: ${bgColor}; color: ${textColor};">
+                      3. Appeal to CREDIBILITY and trust
+                    </div>
+                    <div class="p-3 rounded-lg border-2" style="border-color: ${secondaryColor}; background-color: ${bgColor}; color: ${textColor};">
+                      4. Appeal to TIMING and urgency
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Appeals to match -->
+                <div>
+                  <h3 class="font-semibold text-lg mb-3" style="color: ${primaryColor};">Appeals:</h3>
+                  <div id="appeals" class="space-y-2">
+                    <select id="match-1" class="w-full p-3 rounded-lg border-2" style="border-color: ${secondaryColor}; color: ${textColor}; background-color: ${bgColor};">
+                      <option value="">-- Select for Def 1 --</option>
+                      <option value="pathos">Pathos</option>
+                      <option value="logos">Logos</option>
+                      <option value="ethos">Ethos</option>
+                      <option value="kairos">Kairos</option>
+                    </select>
+                    <select id="match-2" class="w-full p-3 rounded-lg border-2" style="border-color: ${secondaryColor}; color: ${textColor}; background-color: ${bgColor};">
+                      <option value="">-- Select for Def 2 --</option>
+                      <option value="pathos">Pathos</option>
+                      <option value="logos">Logos</option>
+                      <option value="ethos">Ethos</option>
+                      <option value="kairos">Kairos</option>
+                    </select>
+                    <select id="match-3" class="w-full p-3 rounded-lg border-2" style="border-color: ${secondaryColor}; color: ${textColor}; background-color: ${bgColor};">
+                      <option value="">-- Select for Def 3 --</option>
+                      <option value="pathos">Pathos</option>
+                      <option value="logos">Logos</option>
+                      <option value="ethos">Ethos</option>
+                      <option value="kairos">Kairos</option>
+                    </select>
+                    <select id="match-4" class="w-full p-3 rounded-lg border-2" style="border-color: ${secondaryColor}; color: ${textColor}; background-color: ${bgColor};">
+                      <option value="">-- Select for Def 4 --</option>
+                      <option value="pathos">Pathos</option>
+                      <option value="logos">Logos</option>
+                      <option value="ethos">Ethos</option>
+                      <option value="kairos">Kairos</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div id="boss-feedback" class="hidden mt-6 p-4 rounded-xl text-center"></div>
+            
+            <div class="flex gap-4 mt-8 justify-center">
+              <button onclick="submitBossBattle()" class="text-white font-semibold text-lg px-8 py-3 rounded-full transition-all hover:scale-105" style="background-color: ${primaryColor};">
+                ⚔️ Submit Answers ⚔️
+              </button>
+              <button onclick="currentScreen--; renderScreen();" class="text-white font-semibold text-lg px-8 py-3 rounded-full transition-all hover:scale-105" style="background-color: ${secondaryColor};">
+                Back
+              </button>
+            </div>
+          </div>
+        `;
+      } else if (screen.type === 'victory') {
+        createConfetti();
+        content.innerHTML = `
+          <div class="card-enter max-w-2xl w-full rounded-3xl p-8 shadow-2xl text-center" style="background-color: ${cardColor};">
+            <div class="text-7xl mb-4">🎉💖🏆💖🎉</div>
+            <h1 class="font-display text-4xl md:text-5xl font-bold mb-4" style="color: ${textColor};">${completionMsg}</h1>
+            <p class="text-xl mb-6" style="color: ${textColor};">You've mastered Pathos, Logos, Ethos, and Kairos!</p>
+            
+            <div class="rounded-2xl p-6 mb-6" style="background-color: ${bgColor};">
+              <div class="text-4xl mb-2">📸</div>
+              <h2 class="font-display text-2xl font-bold mb-2" style="color: ${primaryColor};">SCREENSHOT THIS PAGE!</h2>
+              <p class="text-lg font-semibold" style="color: ${textColor};">Turn in your screenshot for your homework assignment! ✅</p>
+            </div>
+            
+
+            
+            <div class="flex justify-center gap-2 text-4xl">
+              <span>💕</span><span>💘</span><span>💝</span><span>💖</span><span>💗</span>
+            </div>
+            <p class="mt-4 font-semibold" style="color: ${secondaryColor};">Happy Valentine's Day from your English class! 💌</p>
+          </div>
+        `;
+      }
+    }
+
+    function checkAnswer(selected) {
+      const screen = screens[currentScreen];
+      const feedback = document.getElementById('feedback');
+      const questionCard = document.getElementById('question-card');
+      const buttons = document.querySelectorAll('.answer-btn');
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      
+      buttons.forEach(btn => btn.disabled = true);
+      
+      if (selected === screen.correct) {
+        buttons[selected].style.backgroundColor = '#10b981';
+        buttons[selected].style.borderColor = '#10b981';
+        buttons[selected].style.color = 'white';
+        
+        feedback.className = 'mt-6 p-4 rounded-xl text-center';
+        feedback.style.backgroundColor = '#d1fae5';
+        feedback.innerHTML = `
+          <div class="text-3xl mb-2">💖✨</div>
+          <p class="font-semibold" style="color: #065f46;">Correct! ${screen.explanation}</p>
+          <button onclick="nextScreen()" class="mt-4 text-white font-semibold px-6 py-2 rounded-full" style="background-color: ${primaryColor};">
+            Continue →
+          </button>
+        `;
+      } else {
+        buttons[selected].style.backgroundColor = '#ef4444';
+        buttons[selected].style.borderColor = '#ef4444';
+        buttons[selected].style.color = 'white';
+        questionCard.classList.add('wrong-shake');
+        
+        feedback.className = 'mt-6 p-4 rounded-xl text-center';
+        feedback.style.backgroundColor = '#fee2e2';
+        feedback.innerHTML = `
+          <div class="text-3xl mb-2">💔</div>
+          <p class="font-semibold" style="color: #991b1b;">Oops! That's not quite right.</p>
+          <p class="mt-2" style="color: ${textColor};">The correct answer was: <strong>${screen.options[screen.correct]}</strong></p>
+          <p class="mt-2" style="color: ${textColor};">${screen.explanation}</p>
+          <p class="mt-4 text-lg font-bold" style="color: #991b1b;">Back to the beginning! 🔄</p>
+          <button onclick="restartGame()" class="mt-4 text-white font-semibold px-6 py-2 rounded-full" style="background-color: ${primaryColor};">
+            Try Again 💪
+          </button>
+        `;
+      }
+    }
+
+    function submitBossBattle() {
+      const answers = [
+        document.getElementById('match-1').value,
+        document.getElementById('match-2').value,
+        document.getElementById('match-3').value,
+        document.getElementById('match-4').value
+      ];
+
+      const correctAnswers = ['pathos', 'logos', 'ethos', 'kairos'];
+      const allAnswered = answers.every(a => a !== '');
+      const allCorrect = answers.every((a, i) => a === correctAnswers[i]);
+
+      const feedback = document.getElementById('boss-feedback');
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+
+      if (!allAnswered) {
+        feedback.className = 'mt-6 p-4 rounded-xl text-center';
+        feedback.style.backgroundColor = '#fef3c7';
+        feedback.innerHTML = `
+          <div class="text-3xl mb-2">⚠️</div>
+          <p class="font-semibold" style="color: #92400e;">Please select an answer for each definition!</p>
+        `;
+        feedback.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+
+      if (allCorrect) {
+        feedback.className = 'mt-6 p-4 rounded-xl text-center';
+        feedback.style.backgroundColor = '#d1fae5';
+        feedback.innerHTML = `
+          <div class="text-4xl mb-2">🎉⚔️💖🏆</div>
+          <p class="font-semibold" style="color: #065f46;">PERFECT! You've defeated the boss!</p>
+          <button onclick="nextScreen()" class="mt-4 text-white font-semibold px-6 py-2 rounded-full" style="background-color: ${primaryColor};">
+            Proceed to Victory! →
+          </button>
+        `;
+      } else {
+        const matchingSection = document.getElementById('matching-section');
+        matchingSection.classList.add('wrong-shake');
+        
+        feedback.className = 'mt-6 p-4 rounded-xl text-center';
+        feedback.style.backgroundColor = '#fee2e2';
+        feedback.innerHTML = `
+          <div class="text-3xl mb-2">💔⚔️👹</div>
+          <p class="font-semibold" style="color: #991b1b;">Not quite right! The boss is getting stronger!</p>
+          <p class="mt-2" style="color: ${textColor};">Check your matches and try again!</p>
+          <p class="mt-4 text-lg font-bold" style="color: #991b1b;">Back to the beginning! 🔄</p>
+          <button onclick="restartGame()" class="mt-4 text-white font-semibold px-6 py-2 rounded-full" style="background-color: ${primaryColor};">
+            Restart Game 💪
+          </button>
+        `;
+      }
+      feedback.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function nextScreen() {
+      currentScreen++;
+      renderScreen();
+    }
+
+    function restartGame() {
+      currentScreen = 0;
+      renderScreen();
+    }
+
+    async function onConfigChange(newConfig) {
+      config = { ...config, ...newConfig };
+      renderScreen();
+    }
+
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [
+          {
+            get: () => cfg.background_color || defaultConfig.background_color,
+            set: (value) => { cfg.background_color = value; window.elementSdk.setConfig({ background_color: value }); }
+          },
+          {
+            get: () => cfg.card_color || defaultConfig.card_color,
+            set: (value) => { cfg.card_color = value; window.elementSdk.setConfig({ card_color: value }); }
+          },
+          {
+            get: () => cfg.text_color || defaultConfig.text_color,
+            set: (value) => { cfg.text_color = value; window.elementSdk.setConfig({ text_color: value }); }
+          },
+          {
+            get: () => cfg.primary_action_color || defaultConfig.primary_action_color,
+            set: (value) => { cfg.primary_action_color = value; window.elementSdk.setConfig({ primary_action_color: value }); }
+          },
+          {
+            get: () => cfg.secondary_action_color || defaultConfig.secondary_action_color,
+            set: (value) => { cfg.secondary_action_color = value; window.elementSdk.setConfig({ secondary_action_color: value }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => cfg.font_family || 'Quicksand',
+          set: (value) => { cfg.font_family = value; window.elementSdk.setConfig({ font_family: value }); }
+        },
+        fontSizeable: {
+          get: () => cfg.font_size || 16,
+          set: (value) => { cfg.font_size = value; window.elementSdk.setConfig({ font_size: value }); }
+        }
+      };
+    }
+
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ["main_title", cfg.main_title || defaultConfig.main_title],
+        ["completion_message", cfg.completion_message || defaultConfig.completion_message]
+      ]);
+    }
+
+    // Initialize
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange,
+      mapToCapabilities,
+      mapToEditPanelValues
+    });
+
+    renderScreen();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cc7333205687a2d',t:'MTc3MDg0ODA3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
