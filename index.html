@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rhetorical Appeals Escape Room</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/_sdk/element_sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Quicksand:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     body {
       box-sizing: border-box;
@@ -77,39 +76,27 @@
       margin-bottom: 1rem;
     }
   </style>
-  <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full font-body">
-  <div id="app" class="h-full heart-bg overflow-auto"><!-- Floating Hearts Background -->
+  <div id="app" class="h-full heart-bg overflow-auto">
+   <!-- Floating Hearts Background -->
    <div class="fixed inset-0 pointer-events-none overflow-hidden">
-    <div class="floating-heart absolute text-4xl" style="left: 5%; top: 10%; animation-delay: 0s;">
-     💕
-    </div>
-    <div class="floating-heart absolute text-3xl" style="left: 15%; top: 60%; animation-delay: 0.5s;">
-     💗
-    </div>
-    <div class="floating-heart absolute text-5xl" style="left: 85%; top: 20%; animation-delay: 1s;">
-     💖
-    </div>
-    <div class="floating-heart absolute text-2xl" style="left: 90%; top: 70%; animation-delay: 1.5s;">
-     💝
-    </div>
-    <div class="floating-heart absolute text-4xl" style="left: 50%; top: 5%; animation-delay: 2s;">
-     💘
-    </div>
-    <div class="floating-heart absolute text-3xl" style="left: 75%; top: 85%; animation-delay: 0.3s;">
-     💓
-    </div>
-    <div class="floating-heart absolute text-2xl" style="left: 25%; top: 80%; animation-delay: 1.2s;">
-     💞
-    </div>
-   </div><!-- Main Content Container -->
-   <div id="content" class="relative z-10 min-h-full flex items-center justify-center p-4"><!-- Content will be injected here -->
+    <div class="floating-heart absolute text-4xl" style="left: 5%; top: 10%; animation-delay: 0s;">💕</div>
+    <div class="floating-heart absolute text-3xl" style="left: 15%; top: 60%; animation-delay: 0.5s;">💗</div>
+    <div class="floating-heart absolute text-5xl" style="left: 85%; top: 20%; animation-delay: 1s;">💖</div>
+    <div class="floating-heart absolute text-2xl" style="left: 90%; top: 70%; animation-delay: 1.5s;">💝</div>
+    <div class="floating-heart absolute text-4xl" style="left: 50%; top: 5%; animation-delay: 2s;">💘</div>
+    <div class="floating-heart absolute text-3xl" style="left: 75%; top: 85%; animation-delay: 0.3s;">💓</div>
+    <div class="floating-heart absolute text-2xl" style="left: 25%; top: 80%; animation-delay: 1.2s;">💞</div>
+   </div>
+   <!-- Main Content Container -->
+   <div id="content" class="relative z-10 min-h-full flex items-center justify-center p-4">
+    <!-- Content will be injected here -->
    </div>
   </div>
+  
   <script>
-    const defaultConfig = {
+    const config = {
       main_title: "Rhetorical Appeals Escape Room",
       completion_message: "You've Escaped!",
       background_color: "#fdf2f8",
@@ -119,7 +106,6 @@
       secondary_action_color: "#f472b6"
     };
 
-    let config = { ...defaultConfig };
     let currentScreen = 0;
 
     const screens = [
@@ -202,7 +188,7 @@
           "D: Climate action month is here—join us today before it's too late!"
         ],
         correct: 1,
-        explanation: "This uses specific data (50% increase) and cause-and-effect logic—that's LOGOS! ���"
+        explanation: "This uses specific data (50% increase) and cause-and-effect logic—that's LOGOS! 🌍"
       },
       {
         type: "lesson",
@@ -221,7 +207,7 @@
         number: "5/8",
         question: "Which of the following is an example of ETHOS?",
         options: [
-          "A: You'll feel so much better after eating healthy���imagine your future self!",
+          "A: You'll feel so much better after eating healthy—imagine your future self!",
           "B: 87% of nutritionists agree that whole grains are essential.",
           "C: I've been a certified nutritionist for 15 years, so you can trust my advice.",
           "D: Limited time offer—start your diet today before the sale ends!"
@@ -265,7 +251,7 @@
           "D: Dr. Johnson, a dermatologist, recommends SPF 50."
         ],
         correct: 2,
-        explanation: "The LIMITED TIME and SEASONAL URGENCY create pressure at the RIGHT MOMENT—that's KAIROS! ����"
+        explanation: "The LIMITED TIME and SEASONAL URGENCY create pressure at the RIGHT MOMENT—that's KAIROS! ⏰"
       },
       {
         type: "question",
@@ -309,13 +295,11 @@
       const content = document.getElementById('content');
       const screen = screens[currentScreen];
       
-      const title = config.main_title || defaultConfig.main_title;
-      const completionMsg = config.completion_message || defaultConfig.completion_message;
-      const bgColor = config.background_color || defaultConfig.background_color;
-      const cardColor = config.card_color || defaultConfig.card_color;
-      const textColor = config.text_color || defaultConfig.text_color;
-      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
-      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+      const bgColor = config.background_color;
+      const cardColor = config.card_color;
+      const textColor = config.text_color;
+      const primaryColor = config.primary_action_color;
+      const secondaryColor = config.secondary_action_color;
 
       // Progress indicator - count only questions
       const totalQuestions = screens.filter(s => s.type === 'question').length;
@@ -337,7 +321,7 @@
             ${progressHTML}
             <div class="text-center">
               <div class="text-6xl mb-4">🔐💕</div>
-              <h1 class="font-display text-3xl md:text-4xl font-bold mb-6" style="color: ${textColor};">${title}</h1>
+              <h1 class="font-display text-3xl md:text-4xl font-bold mb-6" style="color: ${textColor};">${config.main_title}</h1>
               <p class="text-lg mb-8 whitespace-pre-line" style="color: ${textColor};">${screen.content}</p>
               <button onclick="nextScreen()" class="pulse-button text-white font-semibold text-xl px-8 py-4 rounded-full transition-all hover:scale-105" style="background-color: ${primaryColor};">
                 💘 Start Your Escape! 💘
@@ -476,7 +460,7 @@
         content.innerHTML = `
           <div class="card-enter max-w-2xl w-full rounded-3xl p-8 shadow-2xl text-center" style="background-color: ${cardColor};">
             <div class="text-7xl mb-4">🎉💖🏆💖🎉</div>
-            <h1 class="font-display text-4xl md:text-5xl font-bold mb-4" style="color: ${textColor};">${completionMsg}</h1>
+            <h1 class="font-display text-4xl md:text-5xl font-bold mb-4" style="color: ${textColor};">${config.completion_message}</h1>
             <p class="text-xl mb-6" style="color: ${textColor};">You've mastered Pathos, Logos, Ethos, and Kairos!</p>
             
             <div class="rounded-2xl p-6 mb-6" style="background-color: ${bgColor};">
@@ -484,8 +468,6 @@
               <h2 class="font-display text-2xl font-bold mb-2" style="color: ${primaryColor};">SCREENSHOT THIS PAGE!</h2>
               <p class="text-lg font-semibold" style="color: ${textColor};">Turn in your screenshot for your homework assignment! ✅</p>
             </div>
-            
-
             
             <div class="flex justify-center gap-2 text-4xl">
               <span>💕</span><span>💘</span><span>💝</span><span>💖</span><span>💗</span>
@@ -501,8 +483,8 @@
       const feedback = document.getElementById('feedback');
       const questionCard = document.getElementById('question-card');
       const buttons = document.querySelectorAll('.answer-btn');
-      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
-      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_action_color;
+      const textColor = config.text_color;
       
       buttons.forEach(btn => btn.disabled = true);
       
@@ -554,8 +536,8 @@
       const allCorrect = answers.every((a, i) => a === correctAnswers[i]);
 
       const feedback = document.getElementById('boss-feedback');
-      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
-      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_action_color;
+      const textColor = config.text_color;
 
       if (!allAnswered) {
         feedback.className = 'mt-6 p-4 rounded-xl text-center';
@@ -607,63 +589,8 @@
       renderScreen();
     }
 
-    async function onConfigChange(newConfig) {
-      config = { ...config, ...newConfig };
-      renderScreen();
-    }
-
-    function mapToCapabilities(cfg) {
-      return {
-        recolorables: [
-          {
-            get: () => cfg.background_color || defaultConfig.background_color,
-            set: (value) => { cfg.background_color = value; window.elementSdk.setConfig({ background_color: value }); }
-          },
-          {
-            get: () => cfg.card_color || defaultConfig.card_color,
-            set: (value) => { cfg.card_color = value; window.elementSdk.setConfig({ card_color: value }); }
-          },
-          {
-            get: () => cfg.text_color || defaultConfig.text_color,
-            set: (value) => { cfg.text_color = value; window.elementSdk.setConfig({ text_color: value }); }
-          },
-          {
-            get: () => cfg.primary_action_color || defaultConfig.primary_action_color,
-            set: (value) => { cfg.primary_action_color = value; window.elementSdk.setConfig({ primary_action_color: value }); }
-          },
-          {
-            get: () => cfg.secondary_action_color || defaultConfig.secondary_action_color,
-            set: (value) => { cfg.secondary_action_color = value; window.elementSdk.setConfig({ secondary_action_color: value }); }
-          }
-        ],
-        borderables: [],
-        fontEditable: {
-          get: () => cfg.font_family || 'Quicksand',
-          set: (value) => { cfg.font_family = value; window.elementSdk.setConfig({ font_family: value }); }
-        },
-        fontSizeable: {
-          get: () => cfg.font_size || 16,
-          set: (value) => { cfg.font_size = value; window.elementSdk.setConfig({ font_size: value }); }
-        }
-      };
-    }
-
-    function mapToEditPanelValues(cfg) {
-      return new Map([
-        ["main_title", cfg.main_title || defaultConfig.main_title],
-        ["completion_message", cfg.completion_message || defaultConfig.completion_message]
-      ]);
-    }
-
-    // Initialize
-    window.elementSdk.init({
-      defaultConfig,
-      onConfigChange,
-      mapToCapabilities,
-      mapToEditPanelValues
-    });
-
+    // Initialize on page load
     renderScreen();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cc7333205687a2d',t:'MTc3MDg0ODA3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ </body>
 </html>
